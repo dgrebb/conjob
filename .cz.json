@@ -1,0 +1,174 @@
+{
+  "commitizen": {
+    "name": "cz_customize",
+    "version": "0.0.1",
+    "tag_format": "$major.$minor.$patch$prerelease",
+    "version_type": "semver",
+    "version_files": ["package.json"],
+    "bump_message": "release $current_version \u2192 $new_version",
+    "update_changelog_on_bump": "true",
+    "use_shortcuts": true,
+    "customize": {
+      "info": "Configuration for Conjob development.",
+      "message_template": "{{change_type}}{% if scope %}({{scope}}){% endif %}: {{subject}}{% if body %}\n\n{{body}}{% endif %}{% if footer %}\n\n{% if is_breaking_change %}BREAKING CHANGE: {% endif %}Closes: {{footer}}{% endif %}",
+      "example": "feature(cli): adds the scraper",
+      "schema": "<type>(<scope>): <subject>\n \n<body>\n \n(BREAKING CHANGE: )<footer>",
+      "schema_pattern": "^(wip|build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w \\-'])+([\\s\\S]*)",
+      "commit_parser": "^((?P<change_type>chore|build|ci|docs|feat|fix|perf|refactor|revert|style|test|BREAKING CHANGE)(?:\\((?P<scope>[^()\r\n]*)\\)|\\()?(?P<breaking>!)?|\\w+!):\\s(?P<message>.*)?",
+      "changelog_pattern": "^(BREAKING CHANGE|chore|build|ci|docs|feat|fix|perf|refactor|revert|style|test)",
+      "bump_pattern": "^(BREAKING CHANGE|chore|docs|feat|fix|perf|refactor|revert|style|test)",
+      "bump_map": {
+        ".+!": "MAJOR",
+        "BREAKING CHANGE": "MAJOR",
+        "feat": "MINOR",
+        "fix": "PATCH",
+        "chore": "PATCH",
+        "docs": "PATCH",
+        "perf": "PATCH",
+        "refactor": "PATCH",
+        "revert": "MINOR",
+        "style": "PATCH",
+        "test": "PATCH"
+      },
+      "change_type_order": [
+        "Breaking Changes",
+        "Features",
+        "Bug Fixes",
+        "Styles",
+        "Performance",
+        "Maintenance",
+        "Documentation",
+        "Refactor",
+        "Reverted",
+        "CI/CD",
+        "Build"
+      ],
+      "change_type_map": {
+        "BREAKING CHANGE": "Breaking Changes",
+        "chore": "Maintenance",
+        "build": "Build",
+        "ci": "CI/CD",
+        "docs": "Documentation",
+        "feat": "Features",
+        "fix": "Bug Fixes",
+        "perf": "Performance",
+        "refactor": "Refactor",
+        "revert": "Reverted",
+        "style": "Styles",
+        "test": "Maintenance"
+      },
+      "questions": [
+        {
+          "type": "list",
+          "name": "change_type",
+          "message": "Select the type of change you are committing",
+          "choices": [
+            {
+              "value": "wip",
+              "name": "wip: Work in progress.",
+              "key": "w"
+            },
+            {
+              "value": "fix",
+              "name": "fix: A bug fix. Correlates with PATCH in SemVer.",
+              "key": "x"
+            },
+            {
+              "value": "feat",
+              "name": "feat: A new feature. Correlates with MINOR in SemVer.",
+              "key": "f"
+            },
+            {
+              "value": "docs",
+              "name": "docs: Documentation only changes.",
+              "key": "d"
+            },
+            {
+              "value": "style",
+              "name": "style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.).",
+              "key": "s"
+            },
+            {
+              "value": "refactor",
+              "name": "refactor: A code change that neither fixes a bug nor adds a feature.",
+              "key": "r"
+            },
+            {
+              "value": "ci",
+              "name": "ci: Changes to our CI configuration files and scripts (example scopes: GitHub).",
+              "key": "c"
+            },
+            {
+              "value": "build",
+              "name": "build: Changes to the dependency ecosystem or configuration of build utilities.",
+              "key": "b"
+            },
+            {
+              "value": "chore",
+              "name": "chore: Maintenance. Correlates with PATCH in SemVer.",
+              "key": "h"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "name": "scope",
+          "message": "What is the scope of this change? (class or file name): (press [enter] to skip) ",
+          "choices": [
+            {
+              "value": "",
+              "name": "",
+              "default": true
+            },
+            {
+              "value": "cli",
+              "name": "cli: Updates to commands and scripts.",
+              "key": "c"
+            },
+            {
+              "value": "api",
+              "name": "api: Changes to API and Request Handlers.",
+              "key": "a"
+            },
+            {
+              "value": "tests",
+              "name": "tests: Changes to tests and test tooling.",
+              "key": "t"
+            },
+            {
+              "value": "utils",
+              "name": "utils: Changes to utilities and helpers.",
+              "key": "u"
+            },
+            {
+              "value": "github",
+              "name": "github: GitHub Actions, Workflows, etc.",
+              "key": "g"
+            }
+          ]
+        },
+        {
+          "type": "input",
+          "name": "subject",
+          "message": "Write a short and imperative summary of the code changes: (lower case and no period)\n"
+        },
+        {
+          "type": "input",
+          "name": "body",
+          "message": "Provide additional contextual information about the code changes: (press [enter] to skip)\n"
+        },
+        {
+          "type": "confirm",
+          "message": "Is this a BREAKING CHANGE? Correlates with MAJOR in SemVer",
+          "name": "is_breaking_change",
+          "default": false
+        },
+        {
+          "type": "input",
+          "name": "footer",
+          "message": "Footer. Information about Breaking Changes and reference issues that this commit closes: (press [enter] to skip)\n"
+        }
+      ]
+    }
+  }
+}
