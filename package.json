@@ -1,0 +1,41 @@
+{
+  "name": "conjob",
+  "version": "0.0.1",
+  "description": "Confluence scraper utilities for building llms.txt.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "space.all": "node scripts/all-spaces.js",
+    "space.single": "node scripts/all-space-content.js",
+    "lint": "eslint .",
+    "lint.fix": "eslint --fix .",
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "bump": "cz bump --changelog",
+    "start": "node scripts/all-spaces.js"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
+  "keywords": [
+    "confluence",
+    "scraper",
+    "markdown",
+    "llms.txt"
+  ],
+  "author": "dgrebb",
+  "license": "ISC",
+  "dependencies": {
+    "jsdom": "^26.0.0",
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.4.2"
+  }
+}

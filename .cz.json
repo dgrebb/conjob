@@ -104,6 +104,11 @@
               "key": "b"
             },
             {
+              "value": "deps",
+              "name": "deps: Updates and upgrades to dependencies.",
+              "key": "d"
+            },
+            {
               "value": "chore",
               "name": "chore: Maintenance. Correlates with PATCH in SemVer.",
               "key": "h"
