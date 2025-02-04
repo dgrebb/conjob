@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "space.all": "node scripts/all-spaces.js",
-    "space.single": "node scripts/all-space-content.js",
+    "space.all": "node scripts/all-spaces.js --limit",
+    "space.single": "node scripts/all-space-content.js --limit",
     "lint": "eslint .",
     "lint.fix": "eslint --fix .",
     "format": "prettier --write .",
