@@ -27,14 +27,14 @@ import {
  * @example
  * await scrapeConfluenceSpace("ENGINEERING");
  */
-export async function scrapeConfluenceSpace() {
+export async function scrapeConfluenceSpace(limit = Infinity) {
   const spaceKey = process.argv[2];
   if (!spaceKey) {
     throw new Error("Please provide a space key as an argument");
   }
 
   console.log(`Fetching content for space: ${spaceKey}`);
-  const pages = await getSpaceContent(spaceKey);
+  const pages = await getSpaceContent(spaceKey, limit);
   console.log(`Found ${pages.length} pages`);
 
   for (const page of pages) {
@@ -55,15 +55,21 @@ export async function scrapeConfluenceSpace() {
  * @returns {Promise<ConfluencePage[]>} Array of page objects with content and metadata
  * @throws {Error} If API calls fail or rate limits are exceeded
  */
-async function getSpaceContent(spaceKey) {
+async function getSpaceContent(spaceKey, limit = Infinity) {
   let pages = [];
   let url = formatApiUrl(`/space/${spaceKey}/content`, {
     expand: "body.storage,ancestors,space,history",
     limit: "100",
   });
+  let requestCount = 0;
 
   while (url) {
+    if (requestCount >= limit) {
+      console.log(`Request limit (${limit}) reached. Stopping...`);
+      break;
+    }
     const data = await fetchWithBackoff(url);
+    requestCount++;
     pages.push(...data.results);
     url = data._links?.next || null;
     if (url) {
@@ -118,7 +124,11 @@ async function saveToMarkdown(spaceKey, page, content) {
   console.log(`✅ Saved: ${filePath}`);
 }
 
-// Run the scraper only if not imported
+// Parse command line arguments
+const args = process.argv.slice(2);
+const limitIndex = args.findIndex((arg) => arg === "-l" || arg === "--limit");
+const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1], 10) : Infinity;
+
 if (import.meta.url === process.argv[1]) {
-  scrapeConfluenceSpace().catch((err) => console.error("Error:", err));
+  scrapeConfluenceSpace(limit).catch((err) => console.error("Error:", err));
 }

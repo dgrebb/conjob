@@ -58,12 +58,18 @@ if (!fs.existsSync(OUTPUT_DIR)) {
  * Fetches all available Confluence spaces
  * @returns {Promise<ConfluenceSpace[]>} Array of space objects
  */
-async function getAllSpaces() {
+async function getAllSpaces(limit = Infinity) {
   let spaces = [];
   let url = "/space?limit=1000";
+  let requestCount = 0;
 
   while (url) {
+    if (requestCount >= limit) {
+      console.log(`Request limit (${limit}) reached. Stopping...`);
+      break;
+    }
     const data = await fetchWithBackoff(url);
+    requestCount++;
     spaces.push(...data.results);
     url = data._links?.next || null;
     if (url) {
@@ -147,9 +153,9 @@ async function saveToMarkdown(spaceKey, page, content) {
  * @returns {Promise<void>}
  * @throws {Error} If API calls fail or file operations fail
  */
-export async function scrapeConfluence() {
+export async function scrapeConfluence(limit = Infinity) {
   console.log("Fetching all spaces...");
-  const spaces = await getAllSpaces();
+  const spaces = await getAllSpaces(limit);
   console.log(`Found ${spaces.length} spaces.`);
 
   for (const space of spaces) {
@@ -171,7 +177,11 @@ export async function scrapeConfluence() {
   console.log("✅ All content has been scraped and saved!");
 }
 
-// Run the scraper only if not imported
+// Parse command line arguments
+const args = process.argv.slice(2);
+const limitIndex = args.findIndex((arg) => arg === "-l" || arg === "--limit");
+const limit = limitIndex !== -1 ? parseInt(args[limitIndex + 1], 10) : Infinity;
+
 if (import.meta.url === process.argv[1]) {
-  scrapeConfluence().catch((err) => console.error("Error:", err));
+  scrapeConfluence(limit).catch((err) => console.error("Error:", err));
 }
